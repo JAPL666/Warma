@@ -90,55 +90,27 @@ public class Warma {
         String str=code[index];
         String expression = Japl.Regex("如果\\((.+?)\\)", str).trim();
         System.out.println(expression);
-        if(str.contains("与")){
-            String[] values=expression.split("与");
-            boolean b=false;
-            for (String value:values){
-                System.out.println(value);
-                b=true;
-            }
-            if(b){
-                StringBuilder c= new StringBuilder();
-                int deep=0;
-                int j;
-                int Row=0;
-                boolean start=true;
-                for(j=index;j<code.length;j++) {
-                    if (code[j].contains("){")) {
-                        deep++;
-                    } else {
-                        if(code[j].contains("}否则{")){
-                            deep--;
-                            if (deep == 0) {
-                                Row=j;
-                                break;
-                            }
-                        }
-                    }
-                    if (start) {
-                        start = false;
-                    } else {
-                        c.append(code[j].trim()).append("\n");
-                        System.out.println(">"+code[j]);
-                    }
-                }
-                System.out.println("当前行数："+index);
-                int x1=getEndRow(code,index,new String[]{"){"},new String[]{"}否则{"});
-                System.out.println("目标行数："+x1);
-                System.out.println("目标"+code[x1]);
-
-                int x2=getEndRow(code,index,new String[]{code[x1]},new String[]{"};"});
-                System.out.println("结束行："+x2);
-                index=x2;
-                execute(c.toString());
-            }else{
-
-            }
-        }else if(str.contains("或者")){
-
-        }else{
-
-        }
+//        if(str.contains("与")){
+//            String[] values=expression.split("与");
+//            boolean b=false;
+//            for (String value:values){
+//                System.out.println(value);
+//                b=true;
+//            }
+//            if(b){
+//
+//            }else{
+//
+//            }
+//        }else if(str.contains("或者")){
+//
+//        }else{
+//
+//        }
+        System.out.println("当前行数："+index);
+        int x1=getEndRow(code,index,new String[]{"){"},new String[]{"};"});
+        System.out.println("结束行数："+x1);
+        System.out.println("目标行："+code[x1]);
     }
     //获取代码块结束行
     public static int getEndRow(String[] code,int index,String[] Start,String[] End){
