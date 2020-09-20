@@ -10,23 +10,35 @@ public class Warma {
         for (int i=0;i<sp.length;i++){
 			
             if(sp[i].contains("循环")){
-				int j=0;
                 int x=Integer.parseInt(Japl.Regex("循环([^\"]+)次",sp[i]).trim());
-                for(int k=0;k<x;k++){
-					
+                for(int k=0;k<x-1;k++){
 					StringBuilder c= new StringBuilder();
-                    j=i+1;
-                    do {
-                        c.append(sp[j].trim()).append("\n");
-                        j++;
-                    } while (!sp[j].contains("}"));
-					
+					int deep=0;
+                    int j;
+                    boolean bool=true;
+                    for(j=i;j<sp.length;j++){
+
+                        if(sp[j].contains("{")){
+                            deep++;
+                        }else{
+                            if(sp[j].contains("}")){
+                                deep--;
+                                if(deep==0){
+                                    break;
+                                }
+                            }
+                        }
+                        if(bool){
+                            bool=false;
+                        }else{
+                            c.append(sp[j].trim()).append("\n");
+                        }
+                    }
 					execute(c.toString());
-					/*System.out.println("============");
-					System.out.println(c);
-					System.out.println("============");*/
+//					System.out.println("============");
+//					System.out.println(c);
+//					System.out.println("============");
                 }
-				i=j-1;
             }else if(sp[i].contains("@")&&sp[i].contains("=")){
                 String name = Japl.Regex("字符串([^\"]+)=", sp[i]).trim();
                 String value = Japl.Regex(name+"=\"([^\"]+)\";", sp[i]).trim();
