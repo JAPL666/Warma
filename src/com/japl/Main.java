@@ -1,7 +1,7 @@
 package com.japl;
 
 import com.japl.Utils.Japl;
-import com.japl.Utils.*;
+import com.japl.Warma.Warma;
 
 public class Main {
 
