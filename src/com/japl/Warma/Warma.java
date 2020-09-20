@@ -101,14 +101,16 @@ public class Warma {
                 StringBuilder c= new StringBuilder();
                 int deep=0;
                 int j;
+                int Row=0;
                 boolean start=true;
                 for(j=index;j<code.length;j++) {
                     if (code[j].contains("){")) {
                         deep++;
                     } else {
-                        if (code[j].contains("};")||code[j].contains("}否则{")){
+                        if(code[j].contains("}否则{")){
                             deep--;
                             if (deep == 0) {
+                                Row=j;
                                 break;
                             }
                         }
@@ -120,14 +122,51 @@ public class Warma {
                         System.out.println(">"+code[j]);
                     }
                 }
+                System.out.println("当前行数："+index);
+                int x1=getEndRow(code,index,new String[]{"){"},new String[]{"}否则{"});
+                System.out.println("目标行数："+x1);
+                System.out.println("目标"+code[x1]);
+
+                int x2=getEndRow(code,index,new String[]{code[x1]},new String[]{"};"});
+                System.out.println("结束行："+x2);
+                index=x2;
                 execute(c.toString());
             }else{
 
             }
         }else if(str.contains("或者")){
-            String value = Japl.Regex("如果\\((.+?)\\)", str).trim();
+
         }else{
-            System.out.println(expression);
+
         }
+    }
+    public static int getEndRow(String[] code,int index,String[] Start,String[] End){
+        int deep=0;
+        int j;
+        int x = 0;
+        for(j=index;j<code.length;j++){
+            boolean b1=false;
+            boolean b2=false;
+            for(String start:Start){
+                b1= code[j].contains(start);
+            }
+
+            for(String end:End){
+                b2= code[j].contains(end);
+            }
+
+            if(b1){
+                deep++;
+            }else{
+                if(b2){
+                    deep--;
+                    if(deep==0){
+                        x=j;
+                        break;
+                    }
+                }
+            }
+        }
+        return x;
     }
 }
