@@ -30,11 +30,12 @@ public class Warma {
 			}else if(str.contains("如果")){
                 //分支语句
                 if(str.contains("如果(")){
-                    Branch(code,i,true);
+                    i=Branch(code,i,true);
                 }else if(str.contains("如果不是(")){
-                    Branch(code,i,false);
+                    i=Branch(code,i,false);
                 }
-
+            }else if(str.contains("}否则{")){
+                i=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
             }
         }
     }
@@ -86,31 +87,30 @@ public class Warma {
         execute(str.replace("@<"+value+">",val.get("value").toString()));
     }
     //分支语句
-    public static void Branch(String[] code,int index,boolean bool){
+    public static int Branch(String[] code,int index,boolean bool){
         String str=code[index];
         String expression = Japl.Regex("如果\\((.+?)\\)", str).trim();
-        System.out.println(expression);
-//        if(str.contains("与")){
-//            String[] values=expression.split("与");
-//            boolean b=false;
-//            for (String value:values){
-//                System.out.println(value);
-//                b=true;
-//            }
-//            if(b){
-//
-//            }else{
-//
-//            }
-//        }else if(str.contains("或者")){
-//
-//        }else{
-//
-//        }
-        System.out.println("当前行数："+index);
-        int x1=getEndRow(code,index,new String[]{"){"},new String[]{"};"});
-        System.out.println("结束行数："+x1);
-        System.out.println("目标行："+code[x1]);
+
+        int x=0;
+        if(expression.equals("真")){
+            x=index;
+            int x1=getEndRow(code,index,new String[]{"如果(","){"},new String[]{"};"});
+//            System.out.println("当前行数："+index);
+//            System.out.println("结束行数："+x1);
+//            System.out.println("目标行："+code[x1]);
+        }else{
+            for (int i=index;i<code.length;i++){
+                if(code[i].contains("}否则{")){
+                    int x1=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
+//                    System.out.println("当前行数："+i);
+//                    System.out.println("结束行数："+x1);
+//                    System.out.println("目标行："+code[x1]);
+                    x=i;
+                    break;
+                }
+            }
+        }
+        return  x;
     }
     //获取代码块结束行
     public static int getEndRow(String[] code,int index,String[] Start,String[] End){
