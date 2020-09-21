@@ -10,11 +10,20 @@ public class Warma {
     public static void execute(String command){
         assert command != null;
         String[] code = command.split("\n");
-		
-        for (int i=0;i<code.length;i++){
-			String str=code[i];
 
-            if(str.contains("循环")&&str.contains("次")){
+        for (int i=0;i<code.length;i++){
+            String str=code[i];
+
+            if(str.equals("")){
+                //空行跳过
+                continue;
+            }
+
+            if(str.trim().charAt(0)=='/'&&str.trim().charAt(1)=='/'){
+                //注释
+                System.out.println(str+"这是一个注释");
+
+            }else if(str.contains("循环")&&str.contains("次")){
                 //循环
                 Loop(code,i);
             }else if(str.contains("@")&&str.contains("=")){
@@ -26,8 +35,8 @@ public class Warma {
                 Variable(str);
             }else if (str.contains("输出(")){
                 //输出语句
-				System.out.println(Japl.Regex("输出\\(\"([^\"]+)\"\\);", code[i]).trim());
-			}else if(str.contains("如果")){
+                System.out.println(Japl.Regex("输出\\(\"([^\"]+)\"\\);", code[i]).trim());
+            }else if(str.contains("如果")){
                 //分支语句
                 if(str.contains("如果(")){
                     i=Branch(code,i,true);
@@ -53,7 +62,7 @@ public class Warma {
                 if(code[j].contains("循环")&&code[j].contains("次{")){
                     deep++;
                 }else{
-                    if(code[j].contains("}")){
+                    if(code[j].contains("}循环结束;")){
                         deep--;
                         if(deep==0){
                             break;
@@ -67,6 +76,7 @@ public class Warma {
                 }
             }
             execute(c.toString());
+            //System.out.println(">"+c);
         }
     }
     //变量赋值
@@ -94,14 +104,14 @@ public class Warma {
         int x=0;
         if(expression.equals("真")){
             x=index;
-            int x1=getEndRow(code,index,new String[]{"如果(","){"},new String[]{"};"});
+//            int x1=getEndRow(code,index,new String[]{"如果(","){"},new String[]{"};"});
 //            System.out.println("当前行数："+index);
 //            System.out.println("结束行数："+x1);
 //            System.out.println("目标行："+code[x1]);
         }else{
             for (int i=index;i<code.length;i++){
                 if(code[i].contains("}否则{")){
-                    int x1=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
+//                    int x1=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
 //                    System.out.println("当前行数："+i);
 //                    System.out.println("结束行数："+x1);
 //                    System.out.println("目标行："+code[x1]);
