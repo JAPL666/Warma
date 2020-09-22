@@ -1,8 +1,6 @@
 package com.japl.Warma;
 
-import com.japl.Utils.Japl;
 import com.japl.Utils.WarmaObjects;
-
 import java.util.Map;
 
 public class Warma {
@@ -21,9 +19,10 @@ public class Warma {
 
             if(str.trim().charAt(0)=='/'&&str.trim().charAt(1)=='/'){
                 //注释
-                System.out.println(str+"这是一个注释");
+                continue;
+            }
 
-            }else if(str.contains("循环")&&str.contains("次")){
+            if(str.contains("循环")&&str.contains("次{")){
                 //循环
                 Loop(code,i);
             }else if(str.contains("@")&&str.contains("=")){
@@ -35,16 +34,24 @@ public class Warma {
                 Variable(str);
             }else if (str.contains("输出(")){
                 //输出语句
-                System.out.println(Japl.Regex("输出\\(\"([^\"]+)\"\\);", code[i]).trim());
+                System.out.println(getString(str,"输出(\"","\");"));
+
             }else if(str.contains("如果")){
-                //分支语句
+                //分支语句1
                 if(str.contains("如果(")){
                     i=Branch(code,i,true);
                 }else if(str.contains("如果不是(")){
                     i=Branch(code,i,false);
                 }
             }else if(str.contains("}否则{")){
+                //分支语句2
                 i=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
+            }else if(str.contains("函数")&&str.contains("(")&&str.contains("){")){
+                //函数
+                i=getEndRow(code,i,new String[]{"函数","(","){"},new String[]{"返回","(",");"});
+            }else if(str.contains("#")&&str.contains("(")&&str.contains(");")){
+                //函数调用
+
             }
         }
     }
@@ -52,7 +59,8 @@ public class Warma {
     //循环
     public static void Loop(String[] code,int index){
         String str=code[index];
-        int x=Integer.parseInt(Japl.Regex("循环([^\"]+)次",str).trim());
+        int x=Integer.parseInt(getString(str,"循环","次"));
+
         for(int k=0;k<x-1;k++){
             StringBuilder c= new StringBuilder();
             int deep=0;
@@ -75,14 +83,15 @@ public class Warma {
                     c.append(code[j].trim()).append("\n");
                 }
             }
+            //执行代码
             execute(c.toString());
-            //System.out.println(">"+c);
         }
     }
     //变量赋值
     public static void Assign(String str){
-        String name = Japl.Regex("字符串([^\"]+)=", str).trim();
-        String value = Japl.Regex(name+"=\"([^\"]+)\";", str).trim();
+        String name = getString(str,"字符串","=");
+        String value = getString(str,name+"=\"","\";");
+
         String type = str.split(" ")[0].trim();
 
         Map<String, Object> m = WarmaObjects.WarmaMap();
@@ -92,29 +101,21 @@ public class Warma {
     }
     //变量
     public static void Variable(String str){
-        String value = Japl.Regex("@\\<(.+?)\\>", str).trim();
+        String value = getString(str,"@<",">").trim();
         Map<String, Object> val=WarmaObjects.get(value);
         execute(str.replace("@<"+value+">",val.get("value").toString()));
     }
     //分支语句
     public static int Branch(String[] code,int index,boolean bool){
         String str=code[index];
-        String expression = Japl.Regex("如果\\((.+?)\\)", str).trim();
+        String expression = getString(str,"如果(",")");
 
         int x=0;
         if(expression.equals("真")){
             x=index;
-//            int x1=getEndRow(code,index,new String[]{"如果(","){"},new String[]{"};"});
-//            System.out.println("当前行数："+index);
-//            System.out.println("结束行数："+x1);
-//            System.out.println("目标行："+code[x1]);
         }else{
             for (int i=index;i<code.length;i++){
                 if(code[i].contains("}否则{")){
-//                    int x1=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
-//                    System.out.println("当前行数："+i);
-//                    System.out.println("结束行数："+x1);
-//                    System.out.println("目标行："+code[x1]);
                     x=i;
                     break;
                 }
@@ -151,5 +152,43 @@ public class Warma {
             }
         }
         return x;
+    }
+    //获取指定范围的字符串
+    public static String getString(String str,String start,String end){
+        char[] s=str.toCharArray();
+        char[] s1=start.toCharArray();
+        char[] s2=end.toCharArray();
+        int a=0,b=0;
+
+        int index=0;
+        boolean bool=true;
+        for (int i=0;i<s.length;i++){
+            if(bool){
+                if(s1.length==1){
+                    a=str.indexOf(start);
+                    continue;
+                }
+                if(s[i]==s1[index]){
+                    index++;
+                    if(index>s1.length-1){
+                        index=0;
+                        bool=false;
+                        a=i+1;
+                    }
+                }
+            }else{
+                if(s2.length==1){
+                    b=str.indexOf(end);
+                    continue;
+                }
+                if(s[i]==s2[index]){
+                    index++;
+                    if(index>s2.length-1){
+                        b=i-(s2.length-1);
+                    }
+                }
+            }
+        }
+        return  str.substring(a,b).trim();
     }
 }
