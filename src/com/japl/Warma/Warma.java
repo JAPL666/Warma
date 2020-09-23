@@ -90,21 +90,27 @@ public class Warma {
     }
     //变量赋值
     public static void Assign(String str){
-        String name = getString(str,"变量","=");
-        String value = getString(str,name+"=\"","\";");
-
+        String name = getString(str,"变量","=").replace("@","");
         String type = str.split(" ")[0].trim();
+        String value;
+        //字符串类型
+        if(str.contains("\"")){
+            value = getString(str,name+"=\"","\";");
 
-        Map<String, Object> m = WarmaObjects.WarmaMap();
-        m.put("value",value);
-        m.put("type",type);
-        WarmaObjects.set(name.replace("@",""),m);
+            Map<String, Object> m = WarmaObjects.WarmaMap();
+            m.put("value",value);
+            m.put("type",type);
+            WarmaObjects.set(name,m);
+        }
     }
     //变量
     public static void Variable(String str){
-        String value = getString(str,"@<",">").trim();
-        Map<String, Object> val=WarmaObjects.get(value);
-        execute(str.replace("@<"+value+">",val.get("value").toString()));
+        //不处理函数返回变量
+        if(!str.contains("}返回(")){
+            String value = getString(str,"@<",">").trim();
+            Map<String, Object> val=WarmaObjects.get(value);
+            execute(str.replace("@<"+value+">",val.get("value").toString()));
+        }
     }
     //分支语句
     public static int Branch(String[] code,int index,boolean bool){
@@ -137,7 +143,7 @@ public class Warma {
         boolean bool=false,b=true;
         StringBuilder builder=new StringBuilder();
         String name=getString(str,"#","(");
-
+        String assing="";
         for (int i=0;i<code.length;i++){
 
             if(code[i].contains("函数 "+name+"(")&&code[i].contains("(")&&code[i].contains("){")){
@@ -160,11 +166,8 @@ public class Warma {
                         //返回值为空
                         //System.out.println("返回值为空");
                     }else{
-                        String assing=getString(code[i],"}返回(",");");
-                        Map<String, Object> m = WarmaObjects.WarmaMap();
-                        m.put("value",assing);
-                        m.put("type","字符串");
-                        WarmaObjects.set(name,m);
+                        //获取返回变量名
+                        assing=getString(code[i],"}返回(",");");
                     }
                     break;
                 }
@@ -178,12 +181,27 @@ public class Warma {
         }
         //执行
         execute(builder.toString());
+
+        //返回值赋值到声明的变量
+        if(str.contains("变量")&&str.contains("=")){
+            //获取变量的值
+            String a = getString(assing,"@<",">");
+            Map<String, Object> val=WarmaObjects.get(a);
+
+            //获取新变量名
+            String assing_new = getString(str,"变量","=").replace("@","");
+            //赋值到新变量
+            Map<String, Object> m = WarmaObjects.WarmaMap();
+            m.put("value",val.get("value"));
+            m.put("type","变量");
+            WarmaObjects.set(assing_new,m);
+        }
     }
     public static void Assign_Type(String str,String assign){
         if(str.contains("\"")){
             Map<String, Object> m = WarmaObjects.WarmaMap();
             m.put("value",str.replace("\"",""));
-            m.put("type","函数返回值");
+            m.put("type","变量");
             WarmaObjects.set(assign,m);
         }
     }
