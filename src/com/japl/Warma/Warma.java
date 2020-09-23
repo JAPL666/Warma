@@ -48,7 +48,6 @@ public class Warma {
                 i=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
             }else if(str.contains("函数")&&str.contains("(")&&str.contains("){")){
                 //函数
-                //i=getEndRow(code,i,new String[]{"函数","(","){"},new String[]{"返回","(",");"});
                 i=getFunctionEnd(code,i);
 
             }else if(str.contains("#")&&str.contains("(")&&str.contains(");")){
@@ -198,6 +197,7 @@ public class Warma {
             boolean b1=false;
             boolean b2=false;
             for(String start:Start){
+                //这里有问题记得修改
                 b1= code[j].contains(start);
             }
 
