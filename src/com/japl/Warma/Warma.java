@@ -17,7 +17,7 @@ public class Warma {
                 continue;
             }
 
-            if(str.trim().charAt(0)=='/'&&str.trim().charAt(1)=='/'){
+            if(str.trim().charAt(0)=='注'&&str.trim().charAt(1)=='释'&&str.trim().charAt(1)==':'){
                 //注释
                 continue;
             }
@@ -25,7 +25,7 @@ public class Warma {
             if(str.contains("循环")&&str.contains("次{")){
                 //循环
                 Loop(code,i);
-            }else if(str.contains("@")&&str.contains("=")){
+            }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
                 //变量赋值
                 Assign(str);
 
@@ -51,7 +51,12 @@ public class Warma {
                 i=getEndRow(code,i,new String[]{"函数","(","){"},new String[]{"返回","(",");"});
             }else if(str.contains("#")&&str.contains("(")&&str.contains(");")){
                 //函数调用
+                String name=getString(str,"#","(");
+//                System.out.println(name);
+//                System.out.println(getString(str,"(",");"));
+                Function(code,name);
 
+                //System.out.println(">"+getCode(code,new String[]{"函数",name,"(","){"},new String[]{"返回"}));
             }
         }
     }
@@ -89,7 +94,7 @@ public class Warma {
     }
     //变量赋值
     public static void Assign(String str){
-        String name = getString(str,"字符串","=");
+        String name = getString(str,"变量","=");
         String value = getString(str,name+"=\"","\";");
 
         String type = str.split(" ")[0].trim();
@@ -110,8 +115,15 @@ public class Warma {
         String str=code[index];
         String expression = getString(str,"如果(",")");
 
+        if (bool){
+            return isTrue(expression,index,code,'真');
+        }else{
+            return isTrue(expression,index,code,'假');
+        }
+    }
+    public static int isTrue(String expression,int index,String[] code,char c){
         int x=0;
-        if(expression.equals("真")){
+        if(expression.equals(String.valueOf(c))){
             x=index;
         }else{
             for (int i=index;i<code.length;i++){
@@ -121,8 +133,18 @@ public class Warma {
                 }
             }
         }
-        return  x;
+        return x;
     }
+    public static void Function(String[] code,String name){
+        for (int i=0;i<code.length;i++){
+            if(code[i].contains("函数")&&code[i].contains(name)&&code[i].contains("(")&&code[i].contains("){")){
+
+                break;
+            }
+        }
+
+    }
+    /*-------------------------------------------------分割线---------------------------------------------------------*/
     //获取代码块结束行
     public static int getEndRow(String[] code,int index,String[] Start,String[] End){
         int deep=0;
@@ -153,42 +175,38 @@ public class Warma {
         }
         return x;
     }
-    //获取指定范围的字符串
-    public static String getString(String str,String start,String end){
-        char[] s=str.toCharArray();
-        char[] s1=start.toCharArray();
-        char[] s2=end.toCharArray();
-        int a=0,b=0;
+    //获取代码块
+    public static String getCode(String[] code,String[] Start,String[] End){
+        int deep=0;
+        int j;
+        StringBuilder builder= new StringBuilder();
+        for(j=0;j<code.length;j++){
+            boolean b1=false;
+            boolean b2=false;
+            for(String start:Start){
+                b1= code[j].contains(start);
+            }
 
-        int index=0;
-        boolean bool=true;
-        for (int i=0;i<s.length;i++){
-            if(bool){
-                if(s1.length==1){
-                    a=str.indexOf(start);
-                    continue;
-                }
-                if(s[i]==s1[index]){
-                    index++;
-                    if(index>s1.length-1){
-                        index=0;
-                        bool=false;
-                        a=i+1;
-                    }
-                }
+            for(String end:End){
+                b2= code[j].contains(end);
+            }
+
+            if(b1){
+                deep++;
             }else{
-                if(s2.length==1){
-                    b=str.indexOf(end);
-                    continue;
-                }
-                if(s[i]==s2[index]){
-                    index++;
-                    if(index>s2.length-1){
-                        b=i-(s2.length-1);
+                if(b2){
+                    deep--;
+                    if(deep==0){
+                        break;
                     }
+                    builder.append(code[j]).append("\n");
                 }
             }
         }
-        return  str.substring(a,b).trim();
+        return builder.toString();
+    }
+    //获取指定范围的字符串
+    public static String getString(String str,String start,String end){
+        return  str.substring(str.indexOf(start)+start.length(),str.indexOf(end)).trim();
     }
 }
