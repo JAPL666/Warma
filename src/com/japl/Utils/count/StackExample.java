@@ -1,4 +1,4 @@
-package com.japl.Test;
+package com.japl.Utils.count;
 
 public class StackExample {    //记录节点的链表
     private NumberExample popNumber = new NumberExample();

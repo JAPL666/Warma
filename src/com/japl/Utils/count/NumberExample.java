@@ -1,4 +1,4 @@
-package com.japl.Test;
+package com.japl.Utils.count;
 
 public class NumberExample {   //节点
     private int number;

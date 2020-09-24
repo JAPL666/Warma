@@ -1,13 +1,13 @@
-package com.japl.Test2;
+package com.japl.Utils.count;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class test2 {
+public class RPN {
 
-    public static Map<String, Integer> signMap = new HashMap<String, Integer>();   //存储运算符和优先级
+    public static Map<String, Integer> signMap = new HashMap<>();   //存储运算符和优先级
     public static String signCol = "+-*/()";
 
     static {
@@ -17,47 +17,47 @@ public class test2 {
         signMap.put("/", 4);
         signMap.put("(", 0);       //用于括号里不只一次运算时  比如（3*2-3）
     }
-
-    public static void main(String[] args) {
-        infix2suffix("9+(3*2-3)*3+10/2");
-    }
-
-    public static void infix2suffix(String string) {
+    public static List<String> infix2suffix(String string) {
         StringBuilder str=new StringBuilder();
         char[] chars=string.toCharArray();
         for (char aChar : chars) {
-            str.append(aChar).append(",");
+            if (signCol.contains(String.valueOf(aChar))){
+                str.append(",").append(aChar).append(",");
+            }else{
+                str.append(aChar);
+            }
         }
-        //String str = "9,+,(,3,*,2,-,3,),*,3,+,10,/,2";
-        //[9, 3, 2, *, 3, -, 3, *, +, 10, 2, /, +]
-
+        String[] strs=str.toString().split(",");
+        str.delete(0,str.length());
+        for(String s:strs){
+            if(!s.equals("")){
+                str.append(s).append(",");
+            }
+        }
         SignList signList = new SignList();
         String[] exp = str.toString().split(",");
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
-        for (int i = 0; i < exp.length; i++) {
-            if (signCol.contains(exp[i])) {
-                if ("(".equals(exp[i])) {     //如果是（  入栈
+        for (String s : exp) {
+            if (signCol.contains(s)) {
+                if ("(".equals(s)) {     //如果是（  入栈
                     SignNode node = new SignNode();
-                    node.setSignName(exp[i]);
+                    node.setSignName(s);
                     signList.push(node);
-                } else if (")".equals(exp[i])) {
+                } else if (")".equals(s)) {
                     popStack(signList, result);
                 } else {
-                    pushOrPopStack(signList, exp[i], result);
+                    pushOrPopStack(signList, s, result);
                 }
-            } else {   //不是运算符则添加到结果集
-                result.add(exp[i]);
+            }else{   //不是运算符则添加到结果集
+                result.add(s);
             }
         }
         while (signList.getLength() > 0) {
             SignNode node = signList.pop();
             result.add(node.getSignName());
         }
-
-        System.out.println(result);
-
-
+        return result;
     }
 
     public static void popStack(SignList signList, List<String> result) {

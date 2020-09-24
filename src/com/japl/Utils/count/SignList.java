@@ -1,4 +1,4 @@
-package com.japl.Test2;
+package com.japl.Utils.count;
 
 public class SignList {
     private SignNode list;
@@ -9,7 +9,7 @@ public class SignList {
     }
 
     public SignNode pop(){
-        SignNode signNode = new SignNode();
+        SignNode signNode;
         signNode = list;
         list = list.next;
         length --;

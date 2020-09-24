@@ -1,6 +1,8 @@
 package com.japl.Warma;
 
 import com.japl.Utils.WarmaObjects;
+import com.japl.Utils.count.CountUtils;
+
 import java.util.Map;
 
 public class Warma {
@@ -28,10 +30,12 @@ public class Warma {
             }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
                 //变量赋值
                 Assign(str);
-
             }else if(str.contains("@<")&&str.contains(">")){
                 //变量
                 Variable(str);
+            }else if(str.contains("$(")&&str.contains(")")){
+                //四则运算
+                Count(str);
             }else if (str.contains("输出(")){
                 //输出语句
                 System.out.println(getString(str,"输出(\"","\");"));
@@ -97,6 +101,11 @@ public class Warma {
         if(str.contains("\"")){
             value = getString(str,name+"=\"","\";");
 
+            if(value.contains("$(")&&!value.contains("@<")){
+                String val = getString(str,"$(",")").trim();
+                int x=CountUtils.count(val);
+                value=String.valueOf(x);
+            }
             Map<String, Object> m = WarmaObjects.WarmaMap();
             m.put("value",value);
             m.put("type",type);
@@ -110,6 +119,15 @@ public class Warma {
             String value = getString(str,"@<",">").trim();
             Map<String, Object> val=WarmaObjects.get(value);
             execute(str.replace("@<"+value+">",val.get("value").toString()));
+        }
+    }
+    //四则运算
+    public static void Count(String str){
+        //不处理函数返回变量
+        if(!str.contains("}返回(")){
+            String value = getString(str,"$(",")").trim();
+            int x=CountUtils.count(value);
+            execute(str.replace("$("+value+")",String.valueOf(x)));
         }
     }
     //分支语句
@@ -148,9 +166,7 @@ public class Warma {
 
             if(code[i].contains("函数 "+name+"(")&&code[i].contains("(")&&code[i].contains("){")){
                 bool=true;
-                if(str.contains("()")){
-                    //无参数
-                }else{
+                if(!str.contains("()")){
                     //输入的参数
                     String[] values=getString(str,"(",");").split(",");
                     //参数变量名
@@ -162,10 +178,7 @@ public class Warma {
             }
             if(bool){
                 if(code[i].contains("}返回(")&&code[i].contains("(")&&code[i].contains(");")){
-                    if(code[i].contains("}返回();")){
-                        //返回值为空
-                        //System.out.println("返回值为空");
-                    }else{
+                    if(!code[i].contains("}返回();")){
                         //获取返回变量名
                         assing=getString(code[i],"}返回(",");");
                     }
