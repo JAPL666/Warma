@@ -1,9 +1,6 @@
 package com.japl.Warma;
 
-import com.japl.Utils.WarmaObjects;
-import com.japl.Utils.count.CountUtils;
-
-import java.util.Map;
+import com.japl.Utils.WarmaUtils;
 
 public class Warma {
     //执行
@@ -26,249 +23,38 @@ public class Warma {
 
             if(str.contains("循环")&&str.contains("次{")){
                 //循环
-                Loop(code,i);
+                new Loop(code,i);
             }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
                 //变量赋值
-                Assign(str);
+                new Variable().Assign(str);
             }else if(str.contains("@<")&&str.contains(">")){
                 //变量
-                Variable(str);
+                new Variable().variable(str);
             }else if(str.contains("$(")&&str.contains(")")){
                 //四则运算
-                Count(str);
+                new Count().Integer(str);
             }else if (str.contains("输出(")){
                 //输出语句
-                System.out.println(getString(str,"输出(\"","\");"));
+                System.out.println(WarmaUtils.getString(str,"输出(\"","\");"));
 
             }else if(str.contains("如果")){
                 //分支语句1
                 if(str.contains("如果(")){
-                    i=Branch(code,i,true);
+                    i=new Branch().Start(code,i,true);
                 }else if(str.contains("如果不是(")){
-                    i=Branch(code,i,false);
+                    i=new Branch().Start(code,i,false);
                 }
             }else if(str.contains("}否则{")){
                 //分支语句2
-                i=getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
+                i=WarmaUtils.getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
             }else if(str.contains("函数")&&str.contains("(")&&str.contains("){")){
                 //函数
-                i=getFunctionEnd(code,i);
+                i=WarmaUtils.getFunctionEnd(code,i);
 
             }else if(str.contains("#")&&str.contains("(")&&str.contains(");")){
                 //函数调用
-                Function(code,i);
+                new Function(code,i);
             }
         }
-    }
-    /*-------------------------------------------------分割线---------------------------------------------------------*/
-    //循环
-    public static void Loop(String[] code,int index){
-        String str=code[index];
-        int x=Integer.parseInt(getString(str,"循环","次"));
-
-        for(int k=0;k<x-1;k++){
-            StringBuilder c= new StringBuilder();
-            int deep=0;
-            int j;
-            boolean bool=true;
-            for(j=index;j<code.length;j++){
-                if(code[j].contains("循环")&&code[j].contains("次{")){
-                    deep++;
-                }else{
-                    if(code[j].contains("}循环结束;")){
-                        deep--;
-                        if(deep==0){
-                            break;
-                        }
-                    }
-                }
-                if(bool){
-                    bool=false;
-                }else{
-                    c.append(code[j].trim()).append("\n");
-                }
-            }
-            //执行代码
-            execute(c.toString());
-        }
-    }
-    //变量赋值
-    public static void Assign(String str){
-        String name = getString(str,"变量","=").replace("@","");
-        String type = str.split(" ")[0].trim();
-        String value;
-        //字符串类型
-        if(str.contains("\"")){
-            value = getString(str,name+"=\"","\";");
-
-            if(value.contains("$(")&&!value.contains("@<")){
-                String val = getString(str,"$(",")").trim();
-                int x=CountUtils.count(val);
-                value=String.valueOf(x);
-            }
-            Map<String, Object> m = WarmaObjects.WarmaMap();
-            m.put("value",value);
-            m.put("type",type);
-            WarmaObjects.set(name,m);
-        }
-    }
-    //变量
-    public static void Variable(String str){
-        //不处理函数返回变量
-        if(!str.contains("}返回(")){
-            String value = getString(str,"@<",">").trim();
-            Map<String, Object> val=WarmaObjects.get(value);
-            execute(str.replace("@<"+value+">",val.get("value").toString()));
-        }
-    }
-    //四则运算
-    public static void Count(String str){
-        //不处理函数返回变量
-        if(!str.contains("}返回(")){
-            String value = getString(str,"$(",")").trim();
-            int x=CountUtils.count(value);
-            execute(str.replace("$("+value+")",String.valueOf(x)));
-        }
-    }
-    //分支语句
-    public static int Branch(String[] code,int index,boolean bool){
-        String str=code[index];
-        String expression = getString(str,"如果(",")");
-
-        if (bool){
-            return isTrue(expression,index,code,'真');
-        }else{
-            return isTrue(expression,index,code,'假');
-        }
-    }
-    public static int isTrue(String expression,int index,String[] code,char c){
-        int x=0;
-        if(expression.equals(String.valueOf(c))){
-            x=index;
-        }else{
-            for (int i=index;i<code.length;i++){
-                if(code[i].contains("}否则{")){
-                    x=i;
-                    break;
-                }
-            }
-        }
-        return x;
-    }
-    //函数
-    public static void Function(String[] code,int index){
-        String str=code[index];
-        boolean bool=false,b=true;
-        StringBuilder builder=new StringBuilder();
-        String name=getString(str,"#","(");
-        String assing="";
-        for (int i=0;i<code.length;i++){
-
-            if(code[i].contains("函数 "+name+"(")&&code[i].contains("(")&&code[i].contains("){")){
-                bool=true;
-                if(!str.contains("()")){
-                    //输入的参数
-                    String[] values=getString(str,"(",");").split(",");
-                    //参数变量名
-                    String[] Assign_values=getString(code[i],"(","){").split(",");
-                    for (int j=0;j<values.length;j++){
-                        Assign_Type(values[j],Assign_values[j]);
-                    }
-                }
-            }
-            if(bool){
-                if(code[i].contains("}返回(")&&code[i].contains("(")&&code[i].contains(");")){
-                    if(!code[i].contains("}返回();")){
-                        //获取返回变量名
-                        assing=getString(code[i],"}返回(",");");
-                    }
-                    break;
-                }
-                if(b){
-                    //第一次运行，不执行
-                    b=false;
-                }else{
-                    builder.append(code[i].trim()).append("\n");
-                }
-            }
-        }
-        //执行
-        execute(builder.toString());
-
-        //返回值赋值到声明的变量
-        if(str.contains("变量")&&str.contains("=")){
-            //获取变量的值
-            String a = getString(assing,"@<",">");
-            Map<String, Object> val=WarmaObjects.get(a);
-
-            //获取新变量名
-            String assing_new = getString(str,"变量","=").replace("@","");
-            //赋值到新变量
-            Map<String, Object> m = WarmaObjects.WarmaMap();
-            m.put("value",val.get("value"));
-            m.put("type","变量");
-            WarmaObjects.set(assing_new,m);
-        }
-    }
-    public static void Assign_Type(String str,String assign){
-        if(str.contains("\"")){
-            Map<String, Object> m = WarmaObjects.WarmaMap();
-            m.put("value",str.replace("\"",""));
-            m.put("type","变量");
-            WarmaObjects.set(assign,m);
-        }
-    }
-    /*-------------------------------------------------分割线---------------------------------------------------------*/
-    //获取代码块结束行
-    public static int getEndRow(String[] code,int index,String[] Start,String[] End){
-        int deep=0;
-        int j;
-        int x = 0;
-        for(j=index;j<code.length;j++){
-            boolean b1=false;
-            boolean b2=false;
-            for(String start:Start){
-                //这里有问题记得修改
-                b1= code[j].contains(start);
-            }
-
-            for(String end:End){
-                b2= code[j].contains(end);
-            }
-
-            if(b1){
-                deep++;
-            }else{
-                if(b2){
-                    deep--;
-                    if(deep==0){
-                        x=j;
-                        break;
-                    }
-                }
-            }
-        }
-        return x;
-    }
-    public static int getFunctionEnd(String[] code,int index){
-        String name=getString(code[index],"函数","(");
-        boolean bool=false;
-        int x=0;
-        for(int i=0;i<code.length;i++){
-            if(code[i].contains("函数 "+name+"(")&&code[i].contains("(")&&code[i].contains("){")){
-                bool=true;
-            }
-            if(bool){
-                if(code[i].contains("}返回(")&&code[i].contains("(")&&code[i].contains(");")){
-                    x=i;
-                    break;
-                }
-            }
-        }
-        return x;
-    }
-    //获取指定范围的字符串
-    public static String getString(String str,String start,String end){
-        return  str.substring(str.indexOf(start)+start.length(),str.indexOf(end)).trim();
     }
 }
