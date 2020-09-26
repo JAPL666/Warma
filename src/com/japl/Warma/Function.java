@@ -16,33 +16,33 @@ public class Function {
         StringBuilder builder=new StringBuilder();
         String name= WarmaUtils.getString(str,"#","(");
         String assing="";
-        for (int i=0;i<code.length;i++){
+        for (String s : code) {
 
-            if(code[i].contains("函数 "+name+"(")&&code[i].contains("(")&&code[i].contains("){")){
-                bool=true;
-                if(!str.contains("()")){
+            if (s.contains("函数 " + name + "(") && s.contains("(") && s.contains("){")) {
+                bool = true;
+                if (!str.contains("()")) {
                     //输入的参数
-                    String[] values= WarmaUtils.getString(str,"(",");").split(",");
+                    String[] values = WarmaUtils.getString(str, "(", ");").split(",");
                     //参数变量名
-                    String[] Assign_values= WarmaUtils.getString(code[i],"(","){").split(",");
-                    for (int j=0;j<values.length;j++){
-                        Assign_Type(values[j],Assign_values[j]);
+                    String[] Assign_values = WarmaUtils.getString(s, "(", "){").split(",");
+                    for (int j = 0; j < values.length; j++) {
+                        Assign_Type(values[j], Assign_values[j]);
                     }
                 }
             }
-            if(bool){
-                if(code[i].contains("}返回(")&&code[i].contains("(")&&code[i].contains(");")){
-                    if(!code[i].contains("}返回();")){
+            if (bool) {
+                if (s.contains("}返回(") && s.contains("(") && s.contains(");")) {
+                    if (!s.contains("}返回();")) {
                         //获取返回变量名
-                        assing= WarmaUtils.getString(code[i],"}返回(",");");
+                        assing = WarmaUtils.getString(s, "}返回(", ");");
                     }
                     break;
                 }
-                if(b){
+                if (b) {
                     //第一次运行，不执行
-                    b=false;
-                }else{
-                    builder.append(code[i].trim()).append("\n");
+                    b = false;
+                } else {
+                    builder.append(s.trim()).append("\n");
                 }
             }
         }
