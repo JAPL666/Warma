@@ -1,5 +1,6 @@
 package com.japl.Utils;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,5 +62,19 @@ public class WarmaUtils {
         Pattern p = Pattern.compile(rex);
         Matcher m = p.matcher(number);
         return m.find();
+    }
+    public static String getVariable(String str){
+        String res=str;
+        while (true){
+            if(res.contains("@<")&&res.contains(">")){
+                String value = WarmaUtils.getString(res,"@<",">").trim();
+
+                Map<String, Object> val= WarmaObjects.get(value);
+                res=res.replace("@<"+value+">",val.get("value").toString());
+            }else{
+                break;
+            }
+        }
+        return res;
     }
 }

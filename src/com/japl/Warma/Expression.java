@@ -4,7 +4,7 @@ import com.japl.Utils.WarmaUtils;
 
 public class Expression {
 
-    String and="<和>",
+    String  and="<和>",
             or="<或者>",
             equals="[等于]",
             contains="[包含]",
@@ -90,7 +90,6 @@ public class Expression {
     private char contains(String str){
         String[] value = str.split("\\"+contains);
         String v1=value[0].trim(),v2=value[1].trim();
-
         if(v1.contains(v2)){
             return '真';
         }else{

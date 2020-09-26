@@ -6,6 +6,7 @@ public class Branch {
     //分支语句
     public int Start(String[] code,int index,boolean bool){
         String str=code[index];
+
         String expression;
         char is;
 
@@ -19,7 +20,8 @@ public class Branch {
         if(expression.equals("真")||expression.equals("假")){
             is=expression.charAt(0);
         }else{
-            is=new Expression().expres(expression);
+            String res = WarmaUtils.getVariable(expression);
+            is=new Expression().expres(res);
         }
 
         if (bool){

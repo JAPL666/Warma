@@ -20,20 +20,12 @@ public class Variable {
                 String val = WarmaUtils.getString(str,"$(",")").trim();
                 int x= CountUtils.count(val);
                 value=String.valueOf(x);
+
             }
             Map<String, Object> m = WarmaObjects.WarmaMap();
             m.put("value",value);
             m.put("type",type);
             WarmaObjects.set(name,m);
-        }
-    }
-    //变量
-    public void variable(String str){
-        //不处理函数返回变量
-        if(!str.contains("}返回(")){
-            String value = WarmaUtils.getString(str,"@<",">").trim();
-            Map<String, Object> val=WarmaObjects.get(value);
-            Warma.execute(str.replace("@<"+value+">",val.get("value").toString()));
         }
     }
 }

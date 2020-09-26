@@ -27,23 +27,22 @@ public class Warma {
             }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
                 //变量赋值
                 new Variable().Assign(str);
-            }else if(str.contains("@<")&&str.contains(">")){
-                //变量
-                new Variable().variable(str);
             }else if(str.contains("$(")&&str.contains(")")){
                 //四则运算
                 new Count().Integer(str);
             }else if (str.contains("输出(")){
                 //输出语句
-                System.out.println(WarmaUtils.getString(str,"输出(\"","\");"));
+                new Print(str);
 
             }else if(str.contains("如果")){
+
                 //分支语句1
                 if(str.contains("如果(")){
                     i=new Branch().Start(code,i,true);
                 }else if(str.contains("如果不是(")){
                     i=new Branch().Start(code,i,false);
                 }
+
             }else if(str.contains("}否则{")){
                 //分支语句2
                 i=WarmaUtils.getEndRow(code,i,new String[]{"}否则{"},new String[]{"};"});
