@@ -6,16 +6,31 @@ public class Branch {
     //分支语句
     public int Start(String[] code,int index,boolean bool){
         String str=code[index];
-        String expression = WarmaUtils.getString(str,"如果(",")");
-        if (bool){
-            return isTrue(expression,index,code,'真');
+        String expression;
+        char is;
+
+        if(bool){
+            expression = WarmaUtils.getString(str,"如果(",")").trim();
         }else{
-            return isTrue(expression,index,code,'假');
+            expression = WarmaUtils.getString(str,"如果不是(",")").trim();
+        }
+
+        //判断是否包含真假
+        if(expression.equals("真")||expression.equals("假")){
+            is=expression.charAt(0);
+        }else{
+            is=new Expression().expres(expression);
+        }
+
+        if (bool){
+            return isTrue(is,index,code,'真');
+        }else{
+            return isTrue(is,index,code,'假');
         }
     }
-    public int isTrue(String expression,int index,String[] code,char c){
+    public int isTrue(char expression,int index,String[] code,char c){
         int x=0;
-        if(expression.equals(String.valueOf(c))){
+        if(expression==c){
             x=index;
         }else{
             for (int i=index;i<code.length;i++){

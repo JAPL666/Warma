@@ -1,5 +1,8 @@
 package com.japl.Utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class WarmaUtils {
     //获取指定范围的字符串
     public static String getString(String str,String start,String end){
@@ -52,5 +55,11 @@ public class WarmaUtils {
             }
         }
         return x;
+    }
+    public static boolean checkNum(String number) {
+        String rex = "^[1-9]\\d*(\\.\\d+)?$";
+        Pattern p = Pattern.compile(rex);
+        Matcher m = p.matcher(number);
+        return m.find();
     }
 }
