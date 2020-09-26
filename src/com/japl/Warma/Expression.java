@@ -8,15 +8,15 @@ public class Expression {
             or="<或者>",
             equals="[等于]",
             contains="[包含]",
-            morethan="[大于]",
-            lessthan="[小于]",
-            morethan_or_equals="[大于等于]",
-            lessthan_or_equals="[小于等于]";
+            more_than="[大于]",
+            less_than="[小于]",
+            more_than_or_equals="[大于等于]",
+            less_than_or_equals="[小于等于]";
 
     public char expres(String str){
         if(str.contains(and)){
             //和
-            String[] values=str.split("\\"+and);
+            String[] values=str.split(and);
             char x='假';
             for (String value:values){
                 x=Switch(value);
@@ -28,7 +28,7 @@ public class Expression {
 
         }else if(str.contains(or)){
             //或者
-            String[] values=str.split("\\"+or);
+            String[] values=str.split(or);
             char x='假';
             for (String value:values){
                 x=Switch(value);
@@ -49,16 +49,16 @@ public class Expression {
         }else if(str.contains(contains)){
             //包含
             return contains(str);
-        }else if(str.contains(morethan)){
+        }else if(str.contains(more_than)){
             //大于
             return morethan(str);
-        }else if(str.contains(lessthan)){
+        }else if(str.contains(less_than)){
             //小于
             return lessthan(str);
-        }else if(str.contains(morethan_or_equals)){
+        }else if(str.contains(more_than_or_equals)){
             //大于等于
             return morethan_or_equals(str);
-        }else if(str.contains(lessthan_or_equals)){
+        }else if(str.contains(less_than_or_equals)){
             //小于等于
             return lessthan_or_equals(str);
         }
@@ -99,7 +99,7 @@ public class Expression {
 
     //大于
     private char morethan(String str){
-        String[] value = str.split("\\"+morethan);
+        String[] value = str.split("\\"+more_than);
         String v1=value[0].trim(),v2=value[1].trim();
         //如果是数字
         if(WarmaUtils.checkNum(v1)&&WarmaUtils.checkNum(v2)){
@@ -114,7 +114,7 @@ public class Expression {
 
     //小于
     private char lessthan(String str){
-        String[] value = str.split("\\"+lessthan);
+        String[] value = str.split("\\"+less_than);
         String v1=value[0].trim(),v2=value[1].trim();
         //如果是数字
         if(WarmaUtils.checkNum(v1)&&WarmaUtils.checkNum(v2)){
@@ -129,7 +129,7 @@ public class Expression {
 
     //大于等于
     private char morethan_or_equals(String str){
-        String[] value = str.split("\\"+morethan_or_equals);
+        String[] value = str.split("\\"+more_than_or_equals);
         String v1=value[0].trim(),v2=value[1].trim();
         //如果是数字
         if(WarmaUtils.checkNum(v1)&&WarmaUtils.checkNum(v2)){
@@ -144,7 +144,7 @@ public class Expression {
 
     //小于等于
     private char lessthan_or_equals(String str){
-        String[] value = str.split("\\"+lessthan_or_equals);
+        String[] value = str.split("\\"+less_than_or_equals);
         String v1=value[0].trim(),v2=value[1].trim();
         //如果是数字
         if(WarmaUtils.checkNum(v1)&&WarmaUtils.checkNum(v2)){
