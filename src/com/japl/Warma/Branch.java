@@ -11,9 +11,9 @@ public class Branch {
         char is;
 
         if(bool){
-            expression = WarmaUtils.getString(str,"如果(",")").trim();
+            expression = WarmaUtils.getString(str,"如果(","){").trim();
         }else{
-            expression = WarmaUtils.getString(str,"如果不是(",")").trim();
+            expression = WarmaUtils.getString(str,"如果不是(","){").trim();
         }
 
         //判断是否包含真假
@@ -21,6 +21,9 @@ public class Branch {
             is=expression.charAt(0);
         }else{
             String res = WarmaUtils.getVariable(expression);
+            if(res.contains("$(")&&res.contains(")")&&!res.contains("@<")){
+                res=WarmaUtils.getCount(res);
+            }
             is=new Expression().expres(res);
         }
 

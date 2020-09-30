@@ -2,7 +2,6 @@ package com.japl.Warma;
 
 import com.japl.Utils.WarmaUtils;
 import com.japl.Utils.WarmaObjects;
-import com.japl.Utils.count.CountUtils;
 
 import java.util.Map;
 
@@ -15,12 +14,9 @@ public class Variable {
         //字符串类型
         if(str.contains("\"")){
             value = WarmaUtils.getString(str,name+"=\"","\";");
-
-            if(value.contains("$(")&&!value.contains("@<")){
-                String val = WarmaUtils.getString(str,"$(",")").trim();
-                int x= CountUtils.count(val);
-                value=String.valueOf(x);
-
+            String ass=WarmaUtils.getVariable(value);
+            if(ass.contains("$(")&&ass.contains(")")&&!ass.contains("@<")){
+                value=WarmaUtils.getCount(ass);
             }
             Map<String, Object> m = WarmaObjects.WarmaMap();
             m.put("value",value);

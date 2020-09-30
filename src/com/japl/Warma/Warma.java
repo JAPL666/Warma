@@ -27,9 +27,6 @@ public class Warma {
             }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
                 //变量赋值
                 new Variable().Assign(str);
-            }else if(str.contains("$(")&&str.contains(")")){
-                //四则运算
-                new Count().Integer(str);
             }else if (str.contains("输出(")){
                 //输出语句
                 new Print(str);

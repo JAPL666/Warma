@@ -1,5 +1,7 @@
 package com.japl.Utils;
 
+import com.japl.Utils.count.CountUtils;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +42,7 @@ public class WarmaUtils {
         }
         return x;
     }
+    //获取函数底部
     public static int getFunctionEnd(String[] code,int index){
         String name= WarmaUtils.getString(code[index],"函数","(");
         boolean bool=false;
@@ -63,6 +66,7 @@ public class WarmaUtils {
         Matcher m = p.matcher(number);
         return m.find();
     }
+    //获取变量的值
     public static String getVariable(String str){
         String res=str;
         while (true){
@@ -71,6 +75,21 @@ public class WarmaUtils {
 
                 Map<String, Object> val= WarmaObjects.get(value);
                 res=res.replace("@<"+value+">",val.get("value").toString());
+            }else{
+                break;
+            }
+        }
+        return res;
+    }
+    //获取四则运算
+    public static String getCount(String str){
+        String res=str;
+        while (true){
+            if(res.contains("$(")&&res.contains(")")){
+                String value = WarmaUtils.getString(res,"$(",")").trim();
+                int x= CountUtils.count(value);
+
+                res=res.replace("$("+value+")",String.valueOf(x));
             }else{
                 break;
             }
