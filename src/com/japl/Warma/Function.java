@@ -15,10 +15,10 @@ public class Function {
         boolean bool=false,b=true;
         StringBuilder builder=new StringBuilder();
         String name= WarmaUtils.getString(str,"#","(");
-        String assing="";
+        String value="";
         for (String s : code) {
 
-            if (s.contains("函数 " + name + "(") && s.contains("(") && s.contains("){")) {
+            if (s.contains("函数 " + name + "(")&& s.contains("){")) {
                 bool = true;
                 if (!str.contains("()")) {
                     //输入的参数
@@ -26,7 +26,8 @@ public class Function {
                     //参数变量名
                     String[] Assign_values = WarmaUtils.getString(s, "(", "){").split(",");
                     for (int j = 0; j < values.length; j++) {
-                        Assign_Type(values[j], Assign_values[j]);
+                        String val=WarmaUtils.getVariableValue(values[j]);
+                        Assign_Type(val, Assign_values[j]);
                     }
                 }
             }
@@ -34,7 +35,7 @@ public class Function {
                 if (s.contains("}返回(") && s.contains("(") && s.contains(");")) {
                     if (!s.contains("}返回();")) {
                         //获取返回变量名
-                        assing = WarmaUtils.getString(s, "}返回(", ");");
+                        value = WarmaUtils.getString(s, "}返回(", ");");
                     }
                     break;
                 }
@@ -52,7 +53,7 @@ public class Function {
         //返回值赋值到声明的变量
         if(str.contains("变量")&&str.contains("=")){
             //获取变量的值
-            String a = WarmaUtils.getString(assing,"@<",">");
+            String a = WarmaUtils.getString(value,"@<",">");
             Map<String, Object> val= WarmaObjects.get(a);
 
             //获取新变量名

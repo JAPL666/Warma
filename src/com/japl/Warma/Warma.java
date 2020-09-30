@@ -24,7 +24,7 @@ public class Warma {
             if(str.contains("循环")&&str.contains("次{")){
                 //循环
                 new Loop(code,i);
-            }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")){
+            }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")&&!str.contains("#")){
                 //变量赋值
                 new Variable().Assign(str);
             }else if (str.contains("输出(")){
