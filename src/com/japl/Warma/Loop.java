@@ -9,7 +9,9 @@ public class Loop {
     //循环
     public void Start(String[] code,int index){
         String str=code[index];
-        int x=Integer.parseInt(WarmaUtils.getString(str,"循环","次"));
+        String value=WarmaUtils.getString(str,"循环","次{");
+        value=WarmaUtils.getVariableValue(value);
+        int x=Integer.parseInt(value);
 
         for(int k=0;k<x-1;k++){
             StringBuilder c= new StringBuilder();
