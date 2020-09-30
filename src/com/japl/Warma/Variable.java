@@ -14,10 +14,8 @@ public class Variable {
         //字符串类型
         if(str.contains("\"")){
             value = WarmaUtils.getString(str,name+"=\"","\";");
-            String ass=WarmaUtils.getVariable(value);
-            if(ass.contains("$(")&&ass.contains(")")&&!ass.contains("@<")){
-                value=WarmaUtils.getCount(ass);
-            }
+            value =WarmaUtils.getVariableValue(value);
+
             Map<String, Object> m = WarmaObjects.WarmaMap();
             m.put("value",value);
             m.put("type",type);

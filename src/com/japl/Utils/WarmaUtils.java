@@ -96,4 +96,11 @@ public class WarmaUtils {
         }
         return res;
     }
+    public static String getVariableValue(String value){
+        value=WarmaUtils.getVariable(value);
+        if(value.contains("$(")&&value.contains(")")&&!value.contains("@<")){
+            value=WarmaUtils.getCount(value);
+        }
+        return value;
+    }
 }

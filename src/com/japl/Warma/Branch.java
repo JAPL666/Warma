@@ -20,10 +20,7 @@ public class Branch {
         if(expression.equals("真")||expression.equals("假")){
             is=expression.charAt(0);
         }else{
-            String res = WarmaUtils.getVariable(expression);
-            if(res.contains("$(")&&res.contains(")")&&!res.contains("@<")){
-                res=WarmaUtils.getCount(res);
-            }
+            String res=WarmaUtils.getVariableValue(expression);
             is=new Expression().expres(res);
         }
 
