@@ -27,11 +27,11 @@ public class Warma {
             }else if(str.contains("变量")&&str.contains("@")&&str.contains("=")&&!str.contains("#")){
                 //变量赋值
                 new Variable().Assign(str);
-            }else if (str.contains("输出(")){
+            }else if (str.contains("输出(")&&str.contains(");")){
                 //输出语句
                 new Print(str);
 
-            }else if(str.contains("如果")){
+            }else if(str.contains("如果")&&str.contains("){")){
 
                 //分支语句1
                 if(str.contains("如果(")){
