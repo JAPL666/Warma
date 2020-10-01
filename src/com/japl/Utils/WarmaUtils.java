@@ -118,4 +118,12 @@ public class WarmaUtils {
         }
         return value;
     }
+    public static String[] insert(String[] array,String str){
+        int size=array.length;
+        String[] arr=new String[size+1];
+        //数组复制
+        System.arraycopy(array, 0, arr, 0, array.length);
+        arr[size]=str;
+        return arr;
+    }
 }

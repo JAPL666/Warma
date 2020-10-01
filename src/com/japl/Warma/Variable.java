@@ -11,8 +11,21 @@ public class Variable {
         String name = WarmaUtils.getString(str,"变量","=").replace("@","");
         String type = str.split(" ")[0].trim();
         String value;
-        //字符串类型
-        if(str.contains("+=")&&str.contains("\";")){
+        if(str.contains("<=")){
+            //数组添加内容
+            name = WarmaUtils.getString(str,"变量","<=").replace("@","");
+            value = WarmaUtils.getString(str,name+"<=\"","\";");
+            value =WarmaUtils.getVariableValue(value);
+
+            Map<String, Object> val= WarmaObjects.get(name);
+            String[] array = (String[]) val.get("value");
+            array=WarmaUtils.insert(array,value);
+
+            Map<String, Object> map = WarmaObjects.WarmaMap();
+            map.put("value",array);
+            map.put("type",type);
+            WarmaObjects.set(name,map);
+        }else if(str.contains("+=")&&str.contains("\";")){
             //连接
             name = WarmaUtils.getString(str,"变量","+=").replace("@","");
             value = WarmaUtils.getString(str,name+"+=\"","\";");
@@ -74,9 +87,10 @@ public class Variable {
                 WarmaObjects.set(name,map);
             }
         }else if(str.contains("[")&&str.contains("];")){
-            //数组
+            //数组赋值
 
             String val=WarmaUtils.getString(str,"=[","];");
+            val=WarmaUtils.getVariableValue(val);
             String[] arrays=val.split("\",\"");
             //移除开头引号
             arrays[0]=arrays[0].substring(1);
