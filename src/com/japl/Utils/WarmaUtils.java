@@ -70,13 +70,18 @@ public class WarmaUtils {
     public static String getVariable(String str){
         String res=str;
         while (true){
-            if(res.contains("@<")&&res.contains(">")){
+            if(res.contains("[@<")&&res.contains(">]")||res.contains("[$(")&&res.contains(")]")){
+                String index_str = WarmaUtils.getString(res,"[","]").trim();
+                String name = getVariableValue(index_str);
+                res=res.replace(index_str,name);
+            }else if(res.contains("@<")&&res.contains(">")){
                 //获取变量名
                 String name = WarmaUtils.getString(res,"@<",">").trim();
                 String value;
                 if(name.contains("[")&&name.contains("]")){
+                    String index_str=WarmaUtils.getString(res,"[","]").trim();
                     //获取下标
-                    int index = Integer.parseInt(WarmaUtils.getString(res,"[","]").trim());
+                    int index = Integer.parseInt(index_str);
                     //获取数组变量名
                     String arrayName=WarmaUtils.getString(res,"@<","[");
 
