@@ -71,10 +71,25 @@ public class WarmaUtils {
         String res=str;
         while (true){
             if(res.contains("@<")&&res.contains(">")){
-                String value = WarmaUtils.getString(res,"@<",">").trim();
+                //获取变量名
+                String name = WarmaUtils.getString(res,"@<",">").trim();
+                String value;
+                if(name.contains("[")&&name.contains("]")){
+                    //获取下标
+                    int index = Integer.parseInt(WarmaUtils.getString(res,"[","]").trim());
+                    //获取数组变量名
+                    String arrayName=WarmaUtils.getString(res,"@<","[");
 
-                Map<String, Object> val= WarmaObjects.get(value);
-                res=res.replace("@<"+value+">",val.get("value").toString());
+                    Map<String, Object> val= WarmaObjects.get(arrayName);
+                    //获取数组中的值
+                    String[] arrays=(String[])val.get("value");
+                    value=arrays[index];
+                }else{
+                    Map<String, Object> val= WarmaObjects.get(name);
+                    //获取变量的值
+                    value=val.get("value").toString();
+                }
+                res=res.replace("@<"+name+">",value);
             }else{
                 break;
             }
