@@ -7,14 +7,24 @@ import java.util.Map;
 
 public class Function {
     public Function(String[] code,int index){
-        Start(code,index);
+        String str=code[index];
+        String name= WarmaUtils.getString(str,"#","(");
+        if(name.contains(".")){
+            String[] names=name.split("\\.");
+            //读取脚本文件
+            String command =WarmaUtils.ReadTextFile(WarmaObjects.ClassPath+"\\"+names[0]+".warma");
+            assert command != null;
+            code = command.split("\n");
+            name=names[1];//设置函数名
+        }
+        Start(str,name,code,index);
     }
     //函数
-    public void Start(String[] code,int index){
-        String str=code[index];
+    public void Start(String str,String name,String[] code,int index){
+        //String str=code[index];
         boolean bool=false,b=true;
         StringBuilder builder=new StringBuilder();
-        String name= WarmaUtils.getString(str,"#","(");
+
         String value="";
         for (String s : code) {
 

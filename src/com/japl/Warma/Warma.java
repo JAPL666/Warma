@@ -1,6 +1,9 @@
 package com.japl.Warma;
 
+import com.japl.Utils.WarmaObjects;
 import com.japl.Utils.WarmaUtils;
+
+import java.io.File;
 
 public class Warma {
     //执行
@@ -55,5 +58,14 @@ public class Warma {
                 i=new JavaReflection().run(code,i);
             }
         }
+    }
+    public static void run(String path){
+        //设置当前脚本路径
+        WarmaObjects.ClassPath=new File(path).getParent();
+        //读取脚本
+        String command =WarmaUtils.ReadTextFile(path);
+        assert command != null;
+        //执行脚本
+        Warma.execute(command);
     }
 }
