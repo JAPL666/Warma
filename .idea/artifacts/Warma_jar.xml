@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="Warma:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Warma_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Warma.jar">
+        <element id="module-output" name="Warma" />
+      </element>
+    </root>
+  </artifact>
+</component>
