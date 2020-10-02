@@ -61,7 +61,7 @@ public class WarmaUtils {
         return x;
     }
     public static boolean checkNum(String number) {
-        String rex = "^[1-9]\\d*(\\.\\d+)?$";
+        String rex = "^[0-9]\\d*(\\.\\d+)?$";
         Pattern p = Pattern.compile(rex);
         Matcher m = p.matcher(number);
         return m.find();

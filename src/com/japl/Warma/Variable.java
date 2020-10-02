@@ -2,6 +2,7 @@ package com.japl.Warma;
 
 import com.japl.Utils.WarmaUtils;
 import com.japl.Utils.WarmaObjects;
+import com.japl.Utils.count.CountUtils;
 
 import java.util.Map;
 
@@ -42,7 +43,17 @@ public class Variable {
 
                 //获取数组中的值
                 String[] arrays=(String[])val.get("value");
-                arrays[index]+=value;
+
+                //判断是否数字，数字相加
+                boolean a=WarmaUtils.checkNum(arrays[index]);
+                boolean b=WarmaUtils.checkNum(value);
+                if(a&&b){
+                    //数字相加
+                    int number = CountUtils.count(arrays[index] + "+" + value);
+                    arrays[index]=String.valueOf(number);
+                }else{
+                    arrays[index]+=value;
+                }
 
                 Map<String, Object> map = WarmaObjects.WarmaMap();
                 map.put("value",arrays);
@@ -52,7 +63,15 @@ public class Variable {
                 String a_str=WarmaObjects.get(name).get("value").toString();
                 Map<String, Object> map = WarmaObjects.WarmaMap();
 
-                map.put("value",a_str+value);
+                boolean a=WarmaUtils.checkNum(a_str);
+                boolean b=WarmaUtils.checkNum(value);
+                if(a&&b){
+                    //数字相加
+                    int number = CountUtils.count(a_str + "+" + value);
+                    map.put("value",number);
+                }else{
+                    map.put("value",a_str+value);
+                }
                 map.put("type",type);
                 WarmaObjects.set(name,map);
             }
