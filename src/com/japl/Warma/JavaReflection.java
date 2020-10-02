@@ -74,6 +74,6 @@ public class JavaReflection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return index+6;
+        return index+5;
     }
 }
