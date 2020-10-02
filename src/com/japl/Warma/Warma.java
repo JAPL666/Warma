@@ -50,6 +50,9 @@ public class Warma {
             }else if(str.contains("#")&&str.contains("(")&&str.contains(");")){
                 //函数调用
                 new Function(code,i);
+            }else if(str.contains("调用jar包(\"")&&str.contains("\");")){
+                //通过反射调用jar包
+                i=new JavaReflection().run(code,i);
             }
         }
     }
