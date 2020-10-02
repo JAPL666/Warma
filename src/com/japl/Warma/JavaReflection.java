@@ -10,8 +10,9 @@ import java.net.URLClassLoader;
 import java.util.Map;
 
 public class JavaReflection {
+    //通过反射调用jar包并获取返回值
     public int run(String[] code,int index){
-
+        //解析参数
         String jarFile = WarmaUtils.getString(code[index], "调用jar包(\"", "\");");
         String className = WarmaUtils.getString(code[index+1], "加载类(\"", "\");");
         String methodName = WarmaUtils.getString(code[index+2], "调用方法(\"", "\");");
@@ -26,9 +27,11 @@ public class JavaReflection {
         Class<?>[] class_type=new Class[types.length];
         for(int i=0;i<types.length;i++){
             String str=WarmaUtils.getVariableValue(parameters[i]);
+            //分配类型
             switch (types[i]){
                 case "字符串":
                     class_type[i]=String.class;
+                    //设置值
                     par[i]=str;
                     break;
                 case "整型":
@@ -54,6 +57,7 @@ public class JavaReflection {
         }
 
         try {
+            //调用jar包
             File file = new File(jarFile);//jar包的路径
             URL url = file.toURI().toURL();
             URLClassLoader loader = new URLClassLoader(new URL[]{url});//创建类加载器
@@ -62,6 +66,7 @@ public class JavaReflection {
             Method method = cls.getMethod(methodName,class_type);
             Object out = method.invoke(instance,par);
 
+            //返回值存入变量
             Map<String, Object> map = WarmaObjects.WarmaMap();
             map.put("value",out.toString());
             map.put("type","变量");
