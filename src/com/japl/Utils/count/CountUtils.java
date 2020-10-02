@@ -3,7 +3,16 @@ package com.japl.Utils.count;
 import java.util.List;
 
 public class CountUtils {
-    public static int count(String string){
+    public static String count(String string){
+        if(string.contains(".")){
+            //浮点
+            return Float(string);
+        }else{
+            //整型
+            return Integer(string);
+        }
+    }
+    public static String Integer(String string){
         //后缀表达式计算
         List<String> x = RPN.infix2suffix(string);
         StringBuilder str= new StringBuilder();
@@ -41,6 +50,46 @@ public class CountUtils {
                 stack.push(numberExample);
             }
         }
-        return result;
+        return String.valueOf(result);
+    }
+    public static String Float(String string){
+        //后缀表达式计算
+        List<String> x = RPN.infix2suffix(string);
+        StringBuilder str= new StringBuilder();
+        for(String xx:x){
+            str.append(xx).append(",");
+        }
+        String sign = "+-*/";
+        String[] exp = str.toString().split(",");
+        StackExample stack = new StackExample();
+        float result = 0;
+        for (String s : exp) {
+            if (sign.contains(s)) {
+                NumberExample numberExample1 = stack.pop();
+                NumberExample numberExample2 = stack.pop();
+                switch (s) {
+                    case "+":
+                        result = numberExample2.getF_number() + numberExample1.getF_number();
+                        break;
+                    case "-":
+                        result = numberExample2.getF_number() - numberExample1.getF_number();
+                        break;
+                    case "*":
+                        result = numberExample2.getF_number() * numberExample1.getF_number();
+                        break;
+                    case "/":
+                        result = numberExample2.getF_number() / numberExample1.getF_number();
+                        break;
+                }
+                NumberExample numberExample = new NumberExample();
+                numberExample.setF_number(result);
+                stack.push(numberExample);      //将结果result入栈
+            } else {
+                NumberExample numberExample = new NumberExample();
+                numberExample.setF_number(Float.parseFloat(s));
+                stack.push(numberExample);
+            }
+        }
+        return String.valueOf(result);
     }
 }

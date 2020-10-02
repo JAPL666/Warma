@@ -49,8 +49,8 @@ public class Variable {
                 boolean b=WarmaUtils.checkNum(value);
                 if(a&&b){
                     //数字相加
-                    int number = CountUtils.count(arrays[index] + "+" + value);
-                    arrays[index]=String.valueOf(number);
+                    String number = CountUtils.count(arrays[index] + "+" + value);
+                    arrays[index]=number;
                 }else{
                     arrays[index]+=value;
                 }
@@ -67,7 +67,7 @@ public class Variable {
                 boolean b=WarmaUtils.checkNum(value);
                 if(a&&b){
                     //数字相加
-                    int number = CountUtils.count(a_str + "+" + value);
+                    String number = CountUtils.count(a_str + "+" + value);
                     map.put("value",number);
                 }else{
                     map.put("value",a_str+value);

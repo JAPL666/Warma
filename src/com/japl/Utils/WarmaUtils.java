@@ -107,9 +107,9 @@ public class WarmaUtils {
         while (true){
             if(res.contains("$(")&&res.contains(")")){
                 String value = WarmaUtils.getString(res,"$(",")").trim();
-                int x= CountUtils.count(value);
+                String x= CountUtils.count(value);
 
-                res=res.replace("$("+value+")",String.valueOf(x));
+                res=res.replace("$("+value+")",x);
             }else{
                 break;
             }
