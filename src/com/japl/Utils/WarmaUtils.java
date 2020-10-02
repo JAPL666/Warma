@@ -2,6 +2,9 @@ package com.japl.Utils;
 
 import com.japl.Utils.count.CountUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -130,5 +133,21 @@ public class WarmaUtils {
         System.arraycopy(array, 0, arr, 0, array.length);
         arr[size]=str;
         return arr;
+    }
+    //读取文件
+    public static String ReadTextFile(String path){
+        try {
+            FileInputStream in = new FileInputStream(path);
+            int lenght;
+            byte[] data=new byte[1024];
+            ByteArrayOutputStream out=new ByteArrayOutputStream();
+            while((lenght=in.read(data))!=-1){
+                out.write(data,0,lenght);
+            }
+            return new String(out.toByteArray(), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
