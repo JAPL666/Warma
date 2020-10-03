@@ -21,7 +21,6 @@ public class Function {
     }
     //函数
     public void Start(String str,String name,String[] code,int index){
-        //String str=code[index];
         boolean bool=false,b=true;
         StringBuilder builder=new StringBuilder();
 

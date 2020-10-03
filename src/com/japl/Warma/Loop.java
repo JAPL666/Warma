@@ -29,6 +29,7 @@ public class Loop {
                         }
                     }
                 }
+                //记得写终止和跳过
                 if(bool){
                     bool=false;
                 }else{
