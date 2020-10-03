@@ -21,12 +21,25 @@ public class JavaReflection {
         String variable = WarmaUtils.getString(code[index+5], "调用结果(\"@<", ">\");");
 
         String[] parameters=parameter.split(",");
+        //参数数组
         Object[] par=new Object[parameters.length];
 
         String[] types=type.split(",");
+        //类型数组
         Class<?>[] class_type=new Class[types.length];
+
+        if(code[index+3].contains("输入参数()")){
+            //无参数
+            par=new Object[0];
+            class_type=new Class[0];
+        }
+
         for(int i=0;i<types.length;i++){
             String str=WarmaUtils.getVariableValue(parameters[i]);
+            if(str.equals("")){
+                //空内容跳过
+                break;
+            }
             //分配类型
             switch (types[i]){
                 case "字符串":
