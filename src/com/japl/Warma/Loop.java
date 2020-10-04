@@ -28,12 +28,15 @@ public class Loop {
                         }
                     }
                 }
-                //记得写终止和跳过
                 if(bool){
                     bool=false;
                 }else{
-                    if(code[j].contains("跳过本次循环;")){
+                    if(code[j].contains("跳过本次循环;")&&!code[j].contains("注释:")){
                         Continue=false;
+                    }
+                    if(code[j].contains("终止循环;")&&!code[j].contains("注释:")){
+                        Continue=false;
+                        k=x;
                     }
                     if(Continue){
                         c.append(code[j].trim()).append("\n");
