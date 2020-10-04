@@ -30,13 +30,16 @@ public class Function {
             if (s.contains("函数 " + name + "(")&& s.contains("){")) {
                 bool = true;
                 if (!str.contains("()")) {
+                    String v=WarmaUtils.getString(str, "(\"", "\");");
                     //输入的参数
-                    String[] values = WarmaUtils.getString(str, "(", ");").split(",");
+                    String[] values =v.split("\",\"");
+
                     //参数变量名
                     String[] Assign_values = WarmaUtils.getString(s, "(", "){").split(",");
+
                     for (int j = 0; j < values.length; j++) {
                         String val=WarmaUtils.getVariableValue(values[j]);
-                        Assign_Type(val, Assign_values[j]);
+                        WarmaUtils.Assignment(Assign_values[j],val,"变量");
                     }
                 }
             }
@@ -68,18 +71,7 @@ public class Function {
             //获取新变量名
             String assing_new = WarmaUtils.getString(str,"变量","=").replace("@","");
             //赋值到新变量
-            Map<String, Object> m = WarmaObjects.WarmaMap();
-            m.put("value",val.get("value"));
-            m.put("type","变量");
-            WarmaObjects.set(assing_new,m);
-        }
-    }
-    public void Assign_Type(String str,String assign){
-        if(str.contains("\"")){
-            Map<String, Object> m = WarmaObjects.WarmaMap();
-            m.put("value",str.replace("\"",""));
-            m.put("type","变量");
-            WarmaObjects.set(assign,m);
+            WarmaUtils.Assignment(assing_new,val.get("value"),"变量");
         }
     }
 }

@@ -80,10 +80,7 @@ public class JavaReflection {
             Object out = method.invoke(instance,par);
 
             //返回值存入变量
-            Map<String, Object> map = WarmaObjects.WarmaMap();
-            map.put("value",out.toString());
-            map.put("type","变量");
-            WarmaObjects.set(variable,map);
+            WarmaUtils.Assignment(variable,out.toString(),"变量");
         } catch (Exception e) {
             e.printStackTrace();
         }

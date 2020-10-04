@@ -22,10 +22,8 @@ public class Variable {
             String[] array = (String[]) val.get("value");
             array=WarmaUtils.insert(array,value);
 
-            Map<String, Object> map = WarmaObjects.WarmaMap();
-            map.put("value",array);
-            map.put("type",type);
-            WarmaObjects.set(name,map);
+            //变量赋值
+            WarmaUtils.Assignment(name,array,type);
         }else if(str.contains("+=")&&str.contains("\";")){
             //连接
             name = WarmaUtils.getString(str,"变量","+=").replace("@","");
@@ -55,10 +53,8 @@ public class Variable {
                     arrays[index]+=value;
                 }
 
-                Map<String, Object> map = WarmaObjects.WarmaMap();
-                map.put("value",arrays);
-                map.put("type",type);
-                WarmaObjects.set(arrayName,map);
+                //变量赋值
+                WarmaUtils.Assignment(arrayName,arrays,type);
             }else{
                 String a_str=WarmaObjects.get(name).get("value").toString();
                 Map<String, Object> map = WarmaObjects.WarmaMap();
@@ -94,32 +90,19 @@ public class Variable {
                 arrays[index]=value;
 
                 //修改数组中的值
-                Map<String, Object> map = WarmaObjects.WarmaMap();
-                map.put("value",arrays);
-                map.put("type",type);
-                WarmaObjects.set(arrayName,map);
+                WarmaUtils.Assignment(arrayName,arrays,type);
             }else{
                 //赋值
-                Map<String, Object> map = WarmaObjects.WarmaMap();
-                map.put("value",value);
-                map.put("type",type);
-                WarmaObjects.set(name,map);
+                WarmaUtils.Assignment(name,value,type);
             }
         }else if(str.contains("[")&&str.contains("];")){
             //数组赋值
 
-            String val=WarmaUtils.getString(str,"=[","];");
+            String val=WarmaUtils.getString(str,"=[\"","\"];");
             val=WarmaUtils.getVariableValue(val);
             String[] arrays=val.split("\",\"");
-            //移除开头引号
-            arrays[0]=arrays[0].substring(1);
-            //移除结尾引号
-            arrays[arrays.length-1]=arrays[arrays.length-1].substring(0,arrays.length-1);
 
-            Map<String, Object> map = WarmaObjects.WarmaMap();
-            map.put("value",arrays);
-            map.put("type",type);
-            WarmaObjects.set(name,map);
+            WarmaUtils.Assignment(name,arrays,type);
         }
     }
 }

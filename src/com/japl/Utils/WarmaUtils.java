@@ -166,4 +166,11 @@ public class WarmaUtils {
         }
         return string;
     }
+    //赋值
+    public static void Assignment(String assignName,Object value,String type){
+        Map<String, Object> m = WarmaObjects.WarmaMap();
+        m.put("value",value);
+        m.put("type",type);
+        WarmaObjects.set(assignName,m);
+    }
 }
