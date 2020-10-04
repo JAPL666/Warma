@@ -14,12 +14,12 @@ public class Loop {
             StringBuilder c= new StringBuilder();
             int deep=0;
             int j;
-            boolean bool=true;
             boolean Continue=true;
 
             for(j=index;j<code.length;j++){
                 if(code[j].contains("循环")&&code[j].contains("次{")){
                     deep++;
+                    j++;
                 }else{
                     if(code[j].contains("}循环结束;")){
                         deep--;
@@ -28,19 +28,15 @@ public class Loop {
                         }
                     }
                 }
-                if(bool){
-                    bool=false;
-                }else{
-                    if(code[j].contains("跳过本次循环;")&&!code[j].contains("注释:")){
-                        Continue=false;
-                    }
-                    if(code[j].contains("终止循环;")&&!code[j].contains("注释:")){
-                        Continue=false;
-                        k=x;
-                    }
-                    if(Continue){
-                        c.append(code[j].trim()).append("\n");
-                    }
+                if(code[j].contains("跳过本次循环;")&&!code[j].contains("注释:")){
+                    Continue=false;
+                }
+                if(code[j].contains("终止循环;")&&!code[j].contains("注释:")){
+                    Continue=false;
+                    k=x;
+                }
+                if(Continue){
+                    c.append(code[j].trim()).append("\n");
                 }
                 i=j+1;
             }
