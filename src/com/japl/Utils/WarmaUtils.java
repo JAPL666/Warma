@@ -3,7 +3,6 @@ package com.japl.Utils;
 import com.japl.Utils.count.CountUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -110,9 +109,16 @@ public class WarmaUtils {
         String res=str;
         while (true){
             if(res.contains("$(")&&res.contains(")")){
-                String value = WarmaUtils.getString(res,"$(",")").trim();
-                String x= CountUtils.count(value);
+                String value = WarmaUtils.Regex("(?<=\\$\\()[^)]*(?=\\))",str);
 
+                char[] chars = value.toCharArray();
+                for(char ch:chars){
+                    if(!checkNum(String.valueOf(ch))&&ch!='+'&&ch!='-'&&ch!='*'&&ch!='/'&&ch!='('&&ch!=')'&&ch!='.'){
+                        //不是数字或者运算符直接返回
+                        return str;
+                    }
+                }
+                String x= CountUtils.count(value);
                 res=res.replace("$("+value+")",x);
             }else{
                 break;
@@ -150,5 +156,14 @@ public class WarmaUtils {
             e.printStackTrace();
         }
         return null;
+    }
+    //正则表达式
+    public static String Regex(String regex,String str) {
+        String string="";
+        Matcher mat= Pattern.compile(regex).matcher(str);
+        while(mat.find()) {
+            string=mat.group(0);
+        }
+        return string;
     }
 }

@@ -126,8 +126,8 @@
 注释:输出("@<Post请求结果>");
 
 注释:返回数据多会导致输出异常记得解决
-注释:变量 @Get请求结果=#系统.发送GET请求("https://weibo.com/login.php","6666");
-注释:输出("@<Get请求结果>");
+变量 @Get请求结果=#系统.发送GET请求("https://weibo.com/login.php","6666");
+输出("@<Get请求结果>");
 
 注释:输入的参数带有逗号或者和代码冲突的字符会出错
 注释:变量 @下载文件请求结果=#系统.下载文件("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1601762111410&di=a8b3d226904230bca100f991d010c46d&imgtype=0&src=http%3A%2F%2Fa4.att.hudong.com%2F22%2F59%2F19300001325156131228593878903.jpg","M://a.png");
