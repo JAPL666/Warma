@@ -48,7 +48,6 @@ public class Loop {
                 }
                 i=j+1;
             }
-            //System.out.println(">>>>>>>>>>>>>>>>>>>\n"+c.toString()+"\n<<<<<<<<<<<<<<<<<<<<<<<<<");
             //执行代码
             Warma.execute(c.toString());
         }
