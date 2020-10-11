@@ -35,6 +35,7 @@ public class Loop {
                 }else{
                     if(code[j].contains("跳过本次循环;")&&!code[j].contains("注释:")){
                         Continue=false;
+                        c.append("}循环结束;".trim()).append("\n");
                     }
                     if(code[j].contains("终止循环;")&&!code[j].contains("注释:")){
                         Continue=false;
@@ -47,6 +48,7 @@ public class Loop {
                 }
                 i=j+1;
             }
+            System.out.println(">>>>>>>>>>>>>>>>>>>\n"+c.toString()+"\n<<<<<<<<<<<<<<<<<<<<<<<<<");
             //执行代码
             Warma.execute(c.toString());
         }
