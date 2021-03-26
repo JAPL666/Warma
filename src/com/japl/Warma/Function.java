@@ -11,8 +11,14 @@ public class Function {
         String name= WarmaUtils.getString(str,"#","(");
         if(name.contains(".")){
             String[] names=name.split("\\.");
+            String path;
+            if(WarmaObjects.ClassPath!=null){
+                path=WarmaObjects.ClassPath+"\\"+names[0]+".warma";
+            }else{
+                path=names[0]+".warma";
+            }
             //读取脚本文件
-            String command =WarmaUtils.ReadTextFile(WarmaObjects.ClassPath+"\\"+names[0]+".warma");
+            String command =WarmaUtils.ReadTextFile(path);
             assert command != null;
             code = command.split("\n");
             name=names[1];//设置函数名
